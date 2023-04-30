@@ -1,4 +1,4 @@
-{ pkgs, ...}: {
+{ pkgs, dotfiles, ...}: {
 
   home.stateVersion = "22.11";
   home.username = "nino";
@@ -22,8 +22,8 @@
     ];
 
   home.file = {
-    ".vim".source = ./dotfiles/.vim;
-    ".doom.d".source = ./dotfiles/.doom.d;
-    ".gitconfig".source = ./dotfiles/.gitconfig;
+    ".vim".source = [(dotfiles.outPath + "/.vim")];
+    ".doom.d".source = [(dotfiles.outPath + "/.doom.d")];
+    ".gitconfig".source = [(dotfiles.outPath + "/.gitconfig")];
   };
 }
