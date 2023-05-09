@@ -1,29 +1,45 @@
-{ pkgs, dotfiles, ...}: {
+{ pkgs, config, lib, ...}: {
 
   home.stateVersion = "22.11";
   home.username = "nino";
   home.homeDirectory = "/home/nino";
 
-  # programs.fish = {
-  #   enable = true;
-  # };
+  xdg.configHome = "${config.home.homeDirectory}/.config";
+
+  nixpkgs.overlays = [                          # This overlay will pull the latest version of Discord
+    (self: super: {
+      discord = super.discord.overrideAttrs (
+        _: { src = builtins.fetchTarball {
+               url = "https://discord.com/api/download?platform=linux&format=tar.gz";
+               sha256 = "1z980p3zmwmy29cdz2v8c36ywrybr7saw8n0w7wlb74m63zb9gpi";
+             };}
+      );
+    })
+  ];
 
   home.packages = with pkgs; [
     htop
+    curl
+    git
     fish
     neovim
-    emacs
     exa
     fzf
-    fd
-    ripgrep
-    texlive.combined.scheme-medium
     binutils
-    ];
+    discord
+    firefox
+    spotify
+    gimp
+  ];
 
-  home.file = {
-    ".vim".source = [(dotfiles.outPath + "/.vim")];
-    ".doom.d".source = [(dotfiles.outPath + "/.doom.d")];
-    ".gitconfig".source = [(dotfiles.outPath + "/.gitconfig")];
+
+  home.activation = {
+    cloneBareRepository = lib.hm.dag.entryAfter ["installPackages"] ''
+      if [ ! -d "${config.home.homeDirectory}/.dotfiles" ]; then
+        XDG_CONFIG_HOME=${config.xdg.configHome}
+        PATH="${config.home.path}/bin:$PATH"
+        curl -Lks https://raw.githubusercontent.com/ninoDeme/dotfiles/main/scripts/Bare.sh | bash
+      fi
+    '';
   };
 }

@@ -1,18 +1,16 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, ... }:
+{ config, pkgs, lib, inputs,... }:
 let
   user = "nino";
 in
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
 
+  imports = [
+    ./modules/editors/emacs.nix
+    ./modules/desktops
+    ./modules/gaming
+    ./modules/programming
+  ];
   # Bootloader.
   # boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -28,7 +26,6 @@ in
 
   fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-    emacs-all-the-icons-fonts
   ];
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -60,10 +57,6 @@ in
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
   services.xserver = {
@@ -100,10 +93,24 @@ in
     description = "Ricardo Soares Demeterko";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.fish;
-    packages = with pkgs; [
-      firefox
-    #  thunderbird
+
+  };
+
+  home-manager.users.${user} = {
+    imports = [
+      ./home.nix
     ];
+  };
+
+  modules.editors.emacs = true;
+  modules.desktops = {
+    gnome = true;
+    i3 = true;
+  };
+  modules.gaming.steam = true;
+  modules.programming = {
+    python = true;
+    nix = true;
   };
 
   environment.shells = with pkgs; [ fish ];
@@ -111,21 +118,15 @@ in
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
     curl
     git
     coreutils
     clang
-  #  wget
   ];
 
   programs.fish.enable = true;
-
-  
-  # services.xserver.videoDrivers = [ "nvidia" ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
