@@ -12,7 +12,7 @@
 
     fonts.fonts = [ pkgs.emacs-all-the-icons-fonts ];
 
-    home-manager.users.nino = {config, lib, pkgs,... }: {
+    home-manager.users.nino = {config, lib, pkgs, inputs, ... }: {
 
       home.stateVersion = "22.11";
       nixpkgs.overlays = [ inputs.emacs-overlay.overlay ];

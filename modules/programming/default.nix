@@ -4,5 +4,6 @@
   imports = [
     ./python.nix
     ./nix.nix
+    ./java.nix
   ];
 }

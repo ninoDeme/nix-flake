@@ -24,6 +24,8 @@ in
     efiSupport = true;
   };
 
+  boot.supportedFilesystems = [ "ntfs" ];
+
   fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
@@ -96,7 +98,7 @@ in
 
   };
 
-  home-manager.users.${user} = {
+  home-manager.users.${user} = {inputs, ...}: {
     imports = [
       ./home.nix
     ];
@@ -111,6 +113,7 @@ in
   modules.programming = {
     python = true;
     nix = true;
+    java = true;
   };
 
   environment.shells = with pkgs; [ fish ];
@@ -124,7 +127,13 @@ in
     git
     coreutils
     clang
+    godot
+
+    wineWowPackages.staging
+    winetricks
   ];
+
+  services.flatpak.enable = true;
 
   programs.fish.enable = true;
 

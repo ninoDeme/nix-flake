@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ...}: {
+{ pkgs, config, lib, inputs, ...}: {
 
   home.stateVersion = "22.11";
   home.username = "nino";
@@ -6,7 +6,12 @@
 
   xdg.configHome = "${config.home.homeDirectory}/.config";
 
-  nixpkgs.overlays = [                          # This overlay will pull the latest version of Discord
+
+  # nixpkgs.config = {
+  #   allowUnfree = true;
+  # };
+
+  nixpkgs.overlays = [  # This overlay will pull the latest version of Discord
     (self: super: {
       discord = super.discord.overrideAttrs (
         _: { src = builtins.fetchTarball {
@@ -30,6 +35,7 @@
     firefox
     spotify
     gimp
+    nodejs
   ];
 
 
