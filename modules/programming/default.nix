@@ -5,5 +5,6 @@
     ./python.nix
     ./nix.nix
     ./java.nix
+    ./clojure.nix
   ];
 }

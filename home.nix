@@ -20,6 +20,7 @@
              };}
       );
     })
+    (final: prev: {neovim = inputs.nixpkgs-unstable.neovim;})
   ];
 
   home.packages = with pkgs; [
@@ -27,7 +28,6 @@
     curl
     git
     fish
-    neovim
     exa
     fzf
     binutils
@@ -36,6 +36,7 @@
     spotify
     gimp
     nodejs
+    neovim
   ];
 
 

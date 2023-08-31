@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs,... }:
+{ config, pkgs, lib, inputs, ... }:
 let
   user = "nino";
 in
@@ -18,7 +18,6 @@ in
 
   boot.loader.grub = {
     enable = true;
-    version = 2;
     useOSProber = true;
     devices = ["nodev"];
     efiSupport = true;
@@ -113,6 +112,7 @@ in
   modules.programming = {
     python = true;
     nix = true;
+    clojure = true;
     java = true;
   };
 
@@ -128,10 +128,12 @@ in
     coreutils
     clang
     godot
-
+    tmux
     wineWowPackages.staging
     winetricks
+    xclip
   ];
+
 
   services.flatpak.enable = true;
 
